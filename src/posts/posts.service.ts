@@ -1,29 +1,33 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
+import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
 
-  private posts: Post[];
+  constructor(private readonly repository: PostsRepository) { }
 
-  constructor() {
-    this.posts = []
-  }
-
-  create(createPostDto: CreatePostDto) {
-    const post = new Post(createPostDto.title, createPostDto.text, createPostDto?.image)
-
+  async create(createPostDto: CreatePostDto) {
     if (!createPostDto.title || !createPostDto.text) {
-      throw new HttpException('Campos obrigatórios ausentes', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Campos obrigatórios ausentes', HttpStatus.BAD_REQUEST);
     }
 
-    return this.posts.push(post);
+    const postData: Partial<CreatePostDto> = {
+      title: createPostDto.title,
+      text: createPostDto.text,
+    };
+
+    if (createPostDto.image !== undefined) {
+      postData.image = createPostDto.image;
+    }
+
+    return await this.repository.create(postData as CreatePostDto);
   }
 
-  findAll() {
-    return this.posts;
+
+  async findAll() {
+    return await this.repository.findAll();
   }
 
   findOne(id: number) {
