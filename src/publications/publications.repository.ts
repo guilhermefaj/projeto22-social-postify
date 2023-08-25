@@ -18,15 +18,26 @@ export class PublicationsRepository {
     return await this.prisma.publications.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} publication`;
+  async findOne(id: number) {
+    return await this.prisma.publications.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updatePublicationDto: UpdatePublicationDto) {
-    return `This action updates a #${id} publication`;
+  async update(id: number, body: UpdatePublicationDto) {
+    return await this.prisma.publications.update({
+      where: { id },
+      data: body,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} publication`;
+  async remove(id: number) {
+    const publication = await this.findOne(id);
+    if (publication) {
+      await this.prisma.publications.delete({
+        where: { id },
+      })
+    }
+    return publication;
   }
 }

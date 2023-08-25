@@ -8,25 +8,36 @@ export class PostsRepository {
 
   constructor(private readonly prisma: PrismaService) { }
 
-  create(body: CreatePostDto) {
-    return this.prisma.posts.create({
+  async create(body: CreatePostDto) {
+    return await this.prisma.posts.create({
       data: body
     });
   }
 
-  findAll() {
-    return this.prisma.posts.findMany();
+  async findAll() {
+    return await this.prisma.posts.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    return await this.prisma.posts.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: number, body: UpdatePostDto) {
+    return await this.prisma.posts.update({
+      where: { id },
+      data: body,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number) {
+    const post = await this.findOne(id);
+    if (post) {
+      await this.prisma.posts.delete({
+        where: { id }
+      })
+    }
+    return post;
   }
 }

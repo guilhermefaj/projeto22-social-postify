@@ -12,7 +12,7 @@ export class MediasService {
       throw new HttpException('Campos obrigatórios ausentes', HttpStatus.BAD_REQUEST)
     }
 
-    //TODO verificar se já existe title e username iguais antes de criar
+    //TODO verificar se já existe title e username iguais antes de criar. Retornar 409 caso exista
 
     return await this.repository.create({
       title: createMediaDto.title,
@@ -37,7 +37,7 @@ export class MediasService {
     if (!media) {
       throw new NotFoundException(`Media de id ${id} não encontrada`)
     }
-    //TODO verificar se já existe title e username iguais antes de atualizar
+    //TODO verificar se já existe title e username iguais antes de atualizar. Retornar 409 caso exista
     return await this.repository.update(id, body);
   }
 
@@ -46,6 +46,7 @@ export class MediasService {
     if (!media) {
       throw new NotFoundException(`Media de id ${id} não encontrada`)
     }
+    //TODO verificar se já existe uma publication agendada para esse post. Retornar erro 403 caso exista
     return await this.repository.remove(id);
   }
 }
