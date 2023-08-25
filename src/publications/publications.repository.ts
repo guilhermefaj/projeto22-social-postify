@@ -1,23 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
-import { PublicationsRepository } from './publications.repository';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class PublicationsService {
+export class PublicationsRepository {
 
-  constructor(private readonly repository: PublicationsRepository) { }
+  constructor(private readonly prisma: PrismaService) { }
 
-  async create(createPublicationDto: CreatePublicationDto) {
-    return await this.repository.create({
-      mediaId: createPublicationDto.mediaId,
-      postId: createPublicationDto.postId,
-      date: createPublicationDto.date,
+  async create(body: CreatePublicationDto) {
+    return await this.prisma.publications.create({
+      data: body
     });
   }
 
   async findAll() {
-    return await this.repository.findAll();
+    return await this.prisma.publications.findMany();
   }
 
   findOne(id: number) {
