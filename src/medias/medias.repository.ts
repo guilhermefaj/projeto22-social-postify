@@ -18,15 +18,26 @@ export class MediasRepository {
     return await this.prisma.medias.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} media`;
+  async findOne(id: number) {
+    return await this.prisma.medias.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateMediaDto: UpdateMediaDto) {
-    return `This action updates a #${id} media`;
+  async update(id: number, body: UpdateMediaDto) {
+    return await this.prisma.medias.update({
+      where: { id },
+      data: body,
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} media`;
+  async remove(id: number) {
+    const media = await this.findOne(id);
+    if (media) {
+      await this.prisma.medias.delete({
+        where: { id },
+      })
+    }
+    return media;
   }
 }

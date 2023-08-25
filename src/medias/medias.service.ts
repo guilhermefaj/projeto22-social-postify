@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { MediasRepository } from './medias.repository';
@@ -24,15 +24,28 @@ export class MediasService {
     return await this.repository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} media`;
+  async findOne(id: number) {
+    const media = await this.repository.findOne(id)
+    if (!media) {
+      throw new NotFoundException(`Media de id ${id} não encontrada`)
+    }
+    return media;
   }
 
-  update(id: number, updateMediaDto: UpdateMediaDto) {
-    return `This action updates a #${id} media`;
+  async update(id: number, body: UpdateMediaDto) {
+    const media = await this.repository.findOne(id);
+    if (!media) {
+      throw new NotFoundException(`Media de id ${id} não encontrada`)
+    }
+    //TODO verificar se já existe title e username iguais antes de atualizar
+    return await this.repository.update(id, body);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} media`;
+  async remove(id: number) {
+    const media = await this.repository.findOne(id);
+    if (!media) {
+      throw new NotFoundException(`Media de id ${id} não encontrada`)
+    }
+    return await this.repository.remove(id);
   }
 }
