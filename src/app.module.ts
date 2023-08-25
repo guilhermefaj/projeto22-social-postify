@@ -4,8 +4,9 @@ import { AppService } from './app.service';
 import { PublicationsModule } from './publications/publications.module';
 import { PostsModule } from './posts/posts.module';
 import { MediasModule } from './medias/medias.module';
+import { PrismaModule } from './prisma/prisma.module';
 @Module({
-  imports: [MediasModule, PostsModule, PublicationsModule],
+  imports: [MediasModule, PostsModule, PublicationsModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })

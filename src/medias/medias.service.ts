@@ -2,30 +2,27 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { Media } from './entities/media.entity';
+import { MediasRepository } from './medias.repository';
 
 @Injectable()
 export class MediasService {
+  constructor(private readonly repository: MediasRepository) { }
 
-  private medias: Media[];
-
-  constructor() {
-    this.medias = []
-  }
-
-  create(createMediaDto: CreateMediaDto) {
-    const media = new Media(createMediaDto.title, createMediaDto.username);
-
+  async create(createMediaDto: CreateMediaDto) {
     if (!createMediaDto.title || !createMediaDto.username) {
       throw new HttpException('Campos obrigatórios ausentes', HttpStatus.BAD_REQUEST)
     }
 
     //TODO verificar se já existe title e username iguais antes de criar
 
-    return this.medias.push(media);
+    return await this.repository.create({
+      title: createMediaDto.title,
+      username: createMediaDto.username,
+    });
   }
 
-  findAll() {
-    return this.medias;
+  async findAll() {
+    return await this.repository.findAll();
   }
 
   findOne(id: number) {

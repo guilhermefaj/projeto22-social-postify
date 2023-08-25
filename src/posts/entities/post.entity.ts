@@ -9,15 +9,15 @@ export class Post {
         this._image = image;
     }
 
-    title() {
+    get title() {
         return this.title;
     }
 
-    text() {
+    get text() {
         return this.text;
     }
 
-    image() {
+    get image() {
         return this.image;
     }
 }

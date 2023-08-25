@@ -7,11 +7,11 @@ export class Media {
         this._username = username;
     }
 
-    title(): string {
+    get title(): string {
         return this._title;
     }
 
-    username(): string {
+    get username(): string {
         return this._username;
     }
 }
